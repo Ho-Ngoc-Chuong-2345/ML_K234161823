@@ -162,10 +162,10 @@ visualizeKMeans(X,
                 "Spending Score",
                 colors)
 
-columns=["Age", "Annual Income", "Spending Score"]
-elbowMethod(df2,columns)
+columns = ['Age', 'Annual Income', 'Spending Score']
+elbowMethod(df2, columns)
 
-X = df2.loc [:, columns].values
+X = df2.loc[:, columns].values
 cluster = 6
 
 y_kmeans, centroids, labels = runKMeans(X, cluster)
@@ -175,16 +175,19 @@ print(labels)
 df2["cluster"] = labels
 print(df2)
 
-def visualize3DKmeans(df, cluster, hover_data, cluster):
-    fig = px.scatter_3d(df,
-                        x=columns,
-                        y=columns,
-                        z=columns,
-                        color='cluster',
-                        hover_data=hover_data,
-                        category_orders={"cluster": range(0, cluster)},
-                        )
+def visualize3DKmeans(df, columns, hover_data, cluster):
+    fig = px.scatter_3d(
+        df,
+        x=columns[0],
+        y=columns[1],
+        z=columns[2],
+        color='cluster',
+        hover_data=hover_data,
+        category_orders={"cluster": range(0, cluster)},
+    )
     fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
     fig.show()
-hover_data=df2.columns
-visualize3DKmeans(df2, cluster, hover_data, cluster)
+
+hover_data = df2.columns
+visualize3DKmeans(df2, columns, hover_data, cluster)
+
