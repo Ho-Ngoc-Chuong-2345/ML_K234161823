@@ -1,0 +1,190 @@
+import mysql.connector
+from flask import Flask
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+from sklearn.cluster import KMeans
+import numpy as np
+
+
+app = Flask(__name__)
+
+def getConnect(server, port, database, username, password):
+    try:
+        app.config['MYSQL_DATABASE_HOST'] = server
+        app.config['MYSQL_DATABASE_PORT'] = port
+        app.config['MYSQL_DATABASE_DB'] = database
+        app.config['MYSQL_DATABASE_USER'] = username
+        app.config['MYSQL_DATABASE_PASSWORD'] = password
+
+        conn = mysql.connector.connect(
+            host=app.config['MYSQL_DATABASE_HOST'],
+            port=app.config['MYSQL_DATABASE_PORT'],
+            database=app.config['MYSQL_DATABASE_DB'],
+            user=app.config['MYSQL_DATABASE_USER'],
+            password=app.config['MYSQL_DATABASE_PASSWORD']
+        )
+        if conn.is_connected():
+            print("Kết nối MySQL thành công!")
+        return conn
+    except mysql.connector.Error as e:
+        print("Error =", e)
+    return None
+
+def closeConnection(conn):
+    if conn is not None and conn.is_connected():
+        conn.close()
+
+def queryDataset(conn, sql):
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    df = pd.DataFrame(cursor.fetchall(), columns=[desc[0] for desc in cursor.description])
+    cursor.close()
+    return df
+
+conn = getConnect('localhost', 3306, 'salesdatabase', 'root', '@Obama123')
+
+sql1 = "SELECT * FROM customer"
+df1 = queryDataset(conn, sql1)
+print(df1)
+
+sql2 = "select distinct customer.CustomerId, Age, Annual_Income, Spending_Score " \
+       "from customer, customer_spend_score " \
+       "where customer.CustomerId = customer_spend_score.CustomerID"
+
+df2 = queryDataset(conn, sql2)
+df2.columns = ['CustomerId', 'Age', 'Annual Income', 'Spending Score']
+
+print(df2)
+print(df2.head())
+print(df2.describe())
+
+def showHistogram(df, columns):
+    plt.figure(1, figsize=(7,8))
+    n = 0
+    for column in columns:
+        n += 1
+        plt.subplot(3, 1, n)
+        plt.subplots_adjust(hspace=0.5, wspace=0.5)
+        sns.histplot(df[column], bins=32, kde=True)
+        plt.title(f'Histogram of {column}')
+    plt.show()
+
+showHistogram(df2, df2.columns[1:])
+
+def elbowMethod(df, columnsForElbow):
+    X = df.loc[:, columnsForElbow].values
+    inertia = []
+    for n in range(1, 11):
+        model = KMeans(n_clusters=n,
+                       init='k-means++',
+                       max_iter=500,
+                       random_state=42)
+        model.fit(X)
+        inertia.append(model.inertia_)
+
+    plt.figure(1, figsize=(15,6))
+    plt.plot(np.arange(1, 11), inertia, 'o')
+    plt.plot(np.arange(1, 11), inertia, '--', alpha=0.5)
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Cluster sum of squared distances')
+    plt.show()
+
+columns = ['Age', 'Spending Score']
+elbowMethod(df2, columns)
+
+def runKMeans(X, cluster):
+    model = KMeans(n_clusters=cluster,
+                   init='k-means++',
+                   max_iter=500,
+                   random_state=42)
+    model.fit(X)
+    labels = model.labels_
+    centroids = model.cluster_centers_
+    y_kmeans = model.fit_predict(X)
+    return y_kmeans, centroids, labels
+
+
+X = df2.loc[:, columns].values
+cluster = 4
+colors = ["red", "green", "blue", "purple", "black", "pink", "orange"]
+
+y_kmeans, centroids, labels = runKMeans(X, cluster)
+print(y_kmeans)
+print(centroids)
+print(labels)
+
+df2["Cluster"] = labels
+
+def visualizeKMeans(X, y_kmeans, cluster, title, xLabel, yLabel, colors):
+    plt.figure(figsize=(10, 10))
+    for i in range(cluster):
+        plt.scatter(X[y_kmeans == i, 0],
+                    X[y_kmeans == i, 1],
+                    s=100,
+                    c=colors[i],
+                    label='Cluster %i' % (i + 1))
+    plt.title(title)
+    plt.xlabel(xLabel)
+    plt.ylabel(yLabel)
+    plt.legend()
+    plt.show()
+
+
+visualizeKMeans(
+    X,
+    y_kmeans,
+    cluster,
+    "Clusters of Customers - Age X Spending Score",
+    "Age",
+    "Spending Score",
+    colors)
+
+columns=["Annual Income", "Spending Score"]
+elbowMethod(df2,columns)
+
+X = df2.loc [:, columns].values
+cluster = 5
+
+y_kmeans, centroids, labels = runKMeans(X, cluster)
+
+print(y_kmeans)
+print(centroids)
+print(labels)
+df2["cluster"] = labels
+
+visualizeKMeans(X,
+                y_kmeans,
+                cluster,
+                "Clusters of Customers - Annual Income X Spending Score",
+                "Annual Income",
+                "Spending Score",
+                colors)
+
+columns=["Age", "Annual Income", "Spending Score"]
+elbowMethod(df2,columns)
+
+X = df2.loc [:, columns].values
+cluster = 6
+
+y_kmeans, centroids, labels = runKMeans(X, cluster)
+print(y_kmeans)
+print(centroids)
+print(labels)
+df2["cluster"] = labels
+print(df2)
+
+def visualize3DKmeans(df, cluster, hover_data, cluster):
+    fig = px.scatter_3d(df,
+                        x=columns,
+                        y=columns,
+                        z=columns,
+                        color='cluster',
+                        hover_data=hover_data,
+                        category_orders={"cluster": range(0, cluster)},
+                        )
+    fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
+    fig.show()
+hover_data=df2.columns
+visualize3DKmeans(df2, cluster, hover_data, cluster)

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'C:\Users\ADMIN\PycharmProjects\ML_K23416\Uis\LoginMainWindow.ui'
+# Form implementation generated from reading ui file 'C:\Users\ADMIN\PycharmProjects\ML_K23416\retail_project\Uis\LoginMainWindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.9.0
 #
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(parent=self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(110, 60, 281, 211))
-        self.groupBox.setProperty("Admin", QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\Uis\\../../../Downloads/Admin.png"))
+        self.groupBox.setProperty("Admin", QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\retail_project\\Uis\\../../../Downloads/Admin.png"))
         self.groupBox.setObjectName("groupBox")
         self.label = QtWidgets.QLabel(parent=self.groupBox)
         self.label.setGeometry(QtCore.QRect(10, 30, 35, 10))
@@ -38,19 +38,19 @@ class Ui_MainWindow(object):
         self.pushButtonLogin = QtWidgets.QPushButton(parent=self.groupBox)
         self.pushButtonLogin.setGeometry(QtCore.QRect(30, 180, 56, 21))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\Uis\\../retail_project/image/login.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\retail_project\\Uis\\../retail_project/image/login.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButtonLogin.setIcon(icon)
         self.pushButtonLogin.setObjectName("pushButtonLogin")
         self.pushButton_2 = QtWidgets.QPushButton(parent=self.groupBox)
         self.pushButton_2.setGeometry(QtCore.QRect(140, 180, 56, 21))
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\Uis\\../retail_project/image/exit.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon1.addPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\retail_project\\Uis\\../retail_project/image/exit.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.pushButton_2.setIcon(icon1)
         self.pushButton_2.setObjectName("pushButton_2")
         self.label_3 = QtWidgets.QLabel(parent=self.groupBox)
-        self.label_3.setGeometry(QtCore.QRect(150, 20, 111, 151))
+        self.label_3.setGeometry(QtCore.QRect(150, 10, 111, 151))
         self.label_3.setText("")
-        self.label_3.setPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\Uis\\../../../Downloads/87402_admin_icon.png"))
+        self.label_3.setPixmap(QtGui.QPixmap("C:\\Users\\ADMIN\\PycharmProjects\\ML_K23416\\retail_project\\Uis\\../../../../Downloads/87402_admin_icon.png"))
         self.label_3.setObjectName("label_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
@@ -70,6 +70,8 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(_translate("MainWindow", "Login System"))
         self.label.setText(_translate("MainWindow", "Email"))
         self.label_2.setText(_translate("MainWindow", "Password"))
+        self.lineEditEmail.setText(_translate("MainWindow", "obama@gmail.com"))
+        self.lineEditPassword.setText(_translate("MainWindow", "123"))
         self.checkBoxSave.setText(_translate("MainWindow", "Save Login Information"))
         self.pushButtonLogin.setText(_translate("MainWindow", "Login"))
         self.pushButton_2.setText(_translate("MainWindow", "Exit"))
